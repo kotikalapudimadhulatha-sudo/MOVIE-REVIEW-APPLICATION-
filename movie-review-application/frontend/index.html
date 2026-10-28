@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CineReview Hub — Movie Review Application</title>
+  <meta name="description" content="A premium movie review platform featuring Indian cinema (Telugu, Hindi, Tamil, Malayalam, Kannada) and world classics.">
+  <link rel="stylesheet" href="styles.css">
+  <!-- Google Fonts for cinematic typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="#" class="brand-logo" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">
+        <span class="logo-icon">🎬</span>
+        <div class="logo-text">
+          <span class="logo-title">CineReview <span class="gold-text">Hub</span></span>
+          <span class="logo-tagline">Movie Review Platform</span>
+        </div>
+      </a>
+
+      <nav class="nav-links" id="navLinks">
+        <a href="#explore" class="nav-link active">Explore</a>
+        <a href="#languages" class="nav-link">Languages</a>
+        <a href="#about" class="nav-link">About Project</a>
+      </nav>
+
+      <div class="nav-actions">
+        <div class="status-pill" id="dbStatusPill" title="Database connection status">
+          <span class="status-dot"></span>
+          <span class="status-text" id="dbStatusText">Checking DB...</span>
+        </div>
+        <button class="mobile-toggle-btn" id="mobileToggleBtn" aria-label="Toggle navigation">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Cinematic Hero Section -->
+  <section class="hero-section">
+    <div class="hero-glow"></div>
+    <div class="hero-container">
+      <div class="hero-badge">
+        <span class="badge-star">★</span> Indian Cinema & Global Classics
+      </div>
+      <h1 class="hero-headline">
+        Discover Stories. <br><span class="hero-gold-gradient">Share Your Verdict.</span>
+      </h1>
+      <p class="hero-subtext">
+        The community-driven review hub celebrating Tollywood blockbusters, Indian masterpieces, and international cinema. Read real audience feedback and write your own movie reviews.
+      </p>
+
+      <!-- Search Bar -->
+      <div class="search-box-wrapper">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input 
+            type="text" 
+            id="searchInput" 
+            placeholder="Search by movie title (e.g. RRR, Kalki 2898 AD, Interstellar)..." 
+            autocomplete="off"
+          />
+          <button class="clear-search-btn" id="clearSearchBtn" aria-label="Clear search" style="display: none;">✕</button>
+        </div>
+      </div>
+
+      <!-- Quick Stats Counter -->
+      <div class="hero-stats">
+        <div class="stat-item">
+          <span class="stat-number" id="statMoviesCount">40+</span>
+          <span class="stat-label">Featured Movies</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-number">6</span>
+          <span class="stat-label">Languages</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-number" id="statReviewsCount">16+</span>
+          <span class="stat-label">Verified Reviews</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-number">100%</span>
+          <span class="stat-label">Free & Open</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content Area -->
+  <main class="main-content" id="explore">
+    <div class="content-container">
+
+      <!-- Filter Bar: Languages & Genres -->
+      <section class="filter-section" id="languages">
+        <div class="filter-header">
+          <h2 class="section-title">Select Cinema Language</h2>
+          <span class="filter-tip">Browse by regional cinema industry</span>
+        </div>
+
+        <!-- Language Tabs -->
+        <div class="language-tabs" id="languageTabs">
+          <button class="lang-tab active" data-lang="All">All Cinema</button>
+          <button class="lang-tab" data-lang="Telugu">Telugu (Tollywood)</button>
+          <button class="lang-tab" data-lang="Hindi">Hindi (Bollywood)</button>
+          <button class="lang-tab" data-lang="Tamil">Tamil (Kollywood)</button>
+          <button class="lang-tab" data-lang="Malayalam">Malayalam (Mollywood)</button>
+          <button class="lang-tab" data-lang="Kannada">Kannada (Sandalwood)</button>
+          <button class="lang-tab" data-lang="English">English (Hollywood)</button>
+        </div>
+
+        <!-- Secondary Controls: Genre Dropdown & Active Filter Tags -->
+        <div class="controls-row">
+          <div class="genre-selector">
+            <label for="genreFilter">Filter by Genre:</label>
+            <select id="genreFilter">
+              <option value="All">All Genres</option>
+              <option value="Action">Action</option>
+              <option value="Drama">Drama</option>
+              <option value="Thriller">Thriller</option>
+              <option value="Sci-Fi">Sci-Fi</option>
+              <option value="Period">Period / Epic</option>
+              <option value="Mythological">Mythological</option>
+              <option value="Comedy">Comedy</option>
+              <option value="Romance">Romance</option>
+              <option value="Biography">Biography / Sports</option>
+            </select>
+          </div>
+
+          <div class="filter-info">
+            <span id="resultsCount">Showing all movies</span>
+            <button id="resetFiltersBtn" class="reset-btn" style="display: none;">Reset Filters</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Movie Cards Grid -->
+      <section class="movies-grid-section">
+        <!-- Loading Spinner -->
+        <div id="moviesLoading" class="loading-state">
+          <div class="spinner"></div>
+          <p>Loading cinema catalog...</p>
+        </div>
+
+        <!-- Empty State (No Search/Filter Results) -->
+        <div id="emptyState" class="empty-state" style="display: none;">
+          <div class="empty-icon">🎞️</div>
+          <h3>No Movies Found</h3>
+          <p id="emptyStateMessage">We couldn't find any movies matching your current search or filter combination.</p>
+          <button class="btn btn-primary" onclick="resetAllFilters()">Clear All Filters</button>
+        </div>
+
+        <!-- Dynamic Grid Container -->
+        <div class="movies-grid" id="moviesGrid">
+          <!-- Movie cards rendered dynamically by app.js -->
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Movie Details & Reviews Modal -->
+  <div class="modal-backdrop" id="movieModal" aria-hidden="true">
+    <div class="modal-dialog">
+      <button class="modal-close-btn" id="modalCloseBtn" aria-label="Close modal">✕</button>
+
+      <div class="modal-body" id="modalBody">
+        <!-- Dynamic modal content injected by app.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Dialog Modal -->
+  <div class="confirm-backdrop" id="confirmModal" aria-hidden="true">
+    <div class="confirm-dialog">
+      <div class="confirm-icon">⚠️</div>
+      <h3 class="confirm-title">Delete Review?</h3>
+      <p class="confirm-message">Are you sure you want to delete this review? This action cannot be undone.</p>
+      <div class="confirm-actions">
+        <button class="btn btn-secondary" id="confirmCancelBtn">Cancel</button>
+        <button class="btn btn-danger" id="confirmDeleteBtn">Yes, Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification System -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Project Info Footer -->
+  <footer class="app-footer" id="about">
+    <div class="footer-container">
+      <div class="footer-col brand-col">
+        <div class="footer-logo">
+          <span>🎬</span> CineReview <span class="gold-text">Hub</span>
+        </div>
+        <p class="footer-desc">
+          A full-stack movie review web application built with HTML5, CSS3, Vanilla JavaScript, Express.js, and Supabase PostgreSQL. Designed for cinema lovers and academic demonstration.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-heading">Regional Cinema</h4>
+        <ul class="footer-links">
+          <li><a href="#" onclick="filterByLang('Telugu'); return false;">Tollywood (Telugu)</a></li>
+          <li><a href="#" onclick="filterByLang('Hindi'); return false;">Bollywood (Hindi)</a></li>
+          <li><a href="#" onclick="filterByLang('Tamil'); return false;">Kollywood (Tamil)</a></li>
+          <li><a href="#" onclick="filterByLang('Malayalam'); return false;">Mollywood (Malayalam)</a></li>
+          <li><a href="#" onclick="filterByLang('Kannada'); return false;">Sandalwood (Kannada)</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-heading">Tech Stack</h4>
+        <ul class="footer-tech-list">
+          <li>⚡ Frontend: HTML5, CSS3, Vanilla JS</li>
+          <li>🚀 Backend: Node.js & Express.js</li>
+          <li>🗄️ Database: Supabase PostgreSQL</li>
+          <li>🔒 Security: XSS Sanitization & Input Validation</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© CineReview Hub. Built with passion for cinema. Ready for GitHub deployment.</p>
+    </div>
+  </footer>
+
+  <!-- Main Application Script -->
+  <script src="app.js"></script>
+</body>
+</html>
+

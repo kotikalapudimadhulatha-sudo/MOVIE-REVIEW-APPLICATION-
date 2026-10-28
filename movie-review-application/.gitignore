@@ -1,0 +1,33 @@
+# CineReview Hub — Git Ignore Configuration
+
+# Dependencies
+node_modules/
+backend/node_modules/
+package-lock.json.backup
+
+# Environment files and credentials
+.env
+backend/.env
+*.env
+*.pem
+*.key
+*.cert
+
+# Operating System files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs and runtime data
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor / IDE settings
+.vscode/
+.idea/
+*.swp
+*.swo
+

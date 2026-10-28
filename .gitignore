@@ -1,0 +1,10 @@
+# CineReview Hub — Workspace Root Git Ignore
+
+node_modules/
+**/node_modules/
+.env
+**/.env
+*.log
+.DS_Store
+Thumbs.db
+
